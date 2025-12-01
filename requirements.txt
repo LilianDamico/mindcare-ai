@@ -1,7 +1,10 @@
 fastapi
 uvicorn
 httpx
+openai==1.48.0
+python-dotenv
 pydantic
 python-multipart
-openai==1.48.0   # caso use GPT
-python-dotenv
+
+requests
+pdfplumber
