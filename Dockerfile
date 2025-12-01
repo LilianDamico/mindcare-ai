@@ -1,17 +1,40 @@
-FROM python:3.11-slim
+# ===========================
+# 📌 BASE PYTHON SLIM
+# ===========================
+FROM python:3.11-slim AS base
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on
 
 WORKDIR /app
 
+# ===========================
+# 📦 INSTALL REQUIREMENTS FIRST (cache otimizado)
+# ===========================
 COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
-
+# ===========================
+# 📁 COPY PROJECT FILES
+# ===========================
 COPY . .
 
-EXPOSE 10000
-ENV PORT=10000
+# ===========================
+# 🔥 APP CONFIG
+# ===========================
+ENV PORT=8000
 
-CMD ["sh", "-c", "gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:${PORT:-10000} app.main:app"]
+# deixamos o EXPOSE apenas documental
+EXPOSE $PORT
+
+# HEALTHCHECK → Render pode usar isso para restart automático
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD wget -qO- http://localhost:$PORT/ || exit 1
+
+# ===========================
+# 🚀 START COMMAND (PRODUCTION)
+# ===========================
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
