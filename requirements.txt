@@ -1,11 +1,11 @@
 fastapi
-uvicorn
+uvicorn[standard]
 httpx
 openai==1.48.0
 python-dotenv
 pydantic
+pydantic-settings
 python-multipart
-
 requests
 pdfplumber
 beautifulsoup4
