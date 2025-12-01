@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+httpx
+pydantic
+python-multipart
+openai==1.48.0   # caso use GPT
+python-dotenv
