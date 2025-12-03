@@ -1,3 +1,4 @@
+# app/interacoes_routes.py
 # ===========================================
 # Interações Medicamentosas - MindCare AI
 # ANVISA + OpenFDA + IA Médica
@@ -14,17 +15,14 @@ router = APIRouter(
 @router.get("/{medicamento}")
 async def verificar_interacoes(medicamento: str):
     """
-    🔍 Consulta completa de análise medicamentosa
-
-    Fluxo:
-    1. Busca ANVISA (Brasil)
-    2. Busca FDA (EUA)
-    3. Funde os dados
-    4. IA gera relatório clinicamente útil
+    🔍 Consulta completa de análise medicamentosa:
+    1. Busca ANVISA
+    2. Busca FDA
+    3. Fusão dos dados
+    4. IA gera relatório clínico útil
     """
-
     resultado = gerar_relatorio(medicamento)
-
+    
     return {
         "medicamento": medicamento.upper(),
         "fonte_principal": "ANVISA + OpenFDA",
